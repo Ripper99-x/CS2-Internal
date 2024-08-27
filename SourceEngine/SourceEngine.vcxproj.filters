@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{2702f9fc-ed17-412c-ab21-926dc6c89477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK">
+      <UniqueIdentifier>{ab201c3c-380a-4ea4-875b-5118a55c5e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\IGameResourceService">
+      <UniqueIdentifier>{036aa78f-500a-476e-b033-f36598413d1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Entity">
+      <UniqueIdentifier>{14643fa4-9016-46d5-ac19-9a9cf11b135e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Engine">
+      <UniqueIdentifier>{6f9a922c-64e2-46b1-a623-4a241db44c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Hooks">
+      <UniqueIdentifier>{279830db-172f-46e5-9bce-2b41de4bf3f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\CCSGOInput">
+      <UniqueIdentifier>{c20474ee-f9a2-484c-ac52-bf383466effa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\UserCMD">
+      <UniqueIdentifier>{379e5b5b-4ca6-42da-8192-58e45f306346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Offsets">
+      <UniqueIdentifier>{9193e754-f5ad-449f-9b21-435d4ef42692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\Trace">
+      <UniqueIdentifier>{86b31092-5482-4077-bcae-7beaa24d2e7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SDK\WorldProjection">
+      <UniqueIdentifier>{aea41ca3-ba44-425c-85d6-e3353a6f5e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{504e36d6-12a5-42ae-8c27-337861fb90a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{468ffd96-9d0c-457f-b743-cf2fa653bac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Features">
+      <UniqueIdentifier>{f959c28f-210f-49dd-ab51-3e8be858ffdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Schema">
+      <UniqueIdentifier>{ce3a9508-e986-4c3f-bca6-3475f62bc14a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DLLMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>SDK\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>SDK\Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderHooks.cpp">
+      <Filter>SDK\Hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatMenu.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ESP.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Aimbot.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
+    <ClCompile Include="Recoil.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils\Defines.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\FNV1A.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Hashes.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Interfaces.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Memory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ReturnAddressr.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Setup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\cVector.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GameResourceService.h">
+      <Filter>SDK\IGameResourceService</Filter>
+    </ClInclude>
+    <ClInclude Include="Schema\Schema.h">
+      <Filter>Resource Files\Schema</Filter>
+    </ClInclude>
+    <ClInclude Include="Schema\SchemaSetup.h">
+      <Filter>Resource Files\Schema</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityHandle.h">
+      <Filter>SDK\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="cGameEntitySystem.h">
+      <Filter>SDK\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>SDK\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="iEngineClient.h">
+      <Filter>SDK\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>SDK\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Bones.h">
+      <Filter>SDK\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="CCSGOInput.h">
+      <Filter>SDK\CCSGOInput</Filter>
+    </ClInclude>
+    <ClInclude Include="qAngles.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UserCMD.h">
+      <Filter>SDK\UserCMD</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>SDK\Offsets</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracing.h">
+      <Filter>SDK\Trace</Filter>
+    </ClInclude>
+    <ClInclude Include="W2S.h">
+      <Filter>SDK\WorldProjection</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderHooks.h">
+      <Filter>SDK\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponFont.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFont.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatMenu.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="xorstr.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ESP.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Aimbot.h">
+      <Filter>Features</Filter>
+    </ClInclude>
+    <ClInclude Include="Recoil.h">
+      <Filter>Features</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Utils\spoofer_stub.asm">
+      <Filter>Utils</Filter>
+    </MASM>
+  </ItemGroup>
+</Project>
