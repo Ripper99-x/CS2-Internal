@@ -1,1 +1,1 @@
-Compile in 'Relase" mode.
+Compile in 'Release" mode.
