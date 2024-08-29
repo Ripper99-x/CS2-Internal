@@ -120,11 +120,32 @@ inline WeaponEntity WeaponEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t*
 }
 
 
+inline ChickenEntity ChickenEntities(C_BaseEntity* pEntity)
+{
+	C_Chicken* CChicken = reinterpret_cast<C_Chicken*>(pEntity);
+
+	if (CChicken == nullptr)
+		return {};
+
+	CGameSceneNode* GameSceneNode = CChicken->GetGameSceneNode();
+
+	if (GameSceneNode == nullptr)
+		return {};
+
+	CurrentChickenEntity->Chicken.Name = "Chicken";
+	CurrentChickenEntity->Chicken.WorldPosition = GameSceneNode->GetOrigin();
+	CurrentChickenEntity->Chicken.isVisible = CChicken->ChickenVisible(SDK::LocalPawn, CChicken);
+	CurrentChickenEntity->Chicken.Rectangle = Get2DBox(CurrentChickenEntity->Chicken.WorldPosition, 25.0f);
+
+	return *CurrentChickenEntity;
+}
+
 
 bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 {
 	NextPlayerList->clear();
 	NextWeaponList->clear();
+	NextChickenList->clear();
 
 	const bool bResult = FakeReturnAddress(Offsets->GameData.ReturnAddress, CreateMove, pInput, nSlot, bActive);
 
@@ -148,6 +169,7 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 
 	for (int nIndex = 1; nIndex <= I::GameResourceService->pGameEntitySystem->GetHighestEntityIndex(); nIndex++)
 	{
+
 		C_BaseEntity* pEntity = I::GameResourceService->pGameEntitySystem->Get(nIndex);
 
 		if (pEntity == nullptr)
@@ -168,6 +190,14 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 				NextPlayerList->push_back(Entity);
 		}
 
+		else if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("C_Chicken"))
+		{
+			ChickenEntity Entity = ChickenEntities(pEntity);
+
+			if (Entity.Chicken.WorldPosition != Vector_t{ 0, 0, 0 })
+				NextChickenList->push_back(Entity);
+		}
+
 		else if (ClassName.find("C_") == 0 || ClassName.find("CBaseAnimGraph") == 0)
 		{
 			WeaponEntity Entity = WeaponEntities(pEntity, pClassInfo);
@@ -175,6 +205,7 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 			if (!Entity.Name.empty())
 				NextWeaponList->push_back(Entity);
 		}
+
 	}
 
 	std::swap(CurrentPlayerList, NextPlayerList);
@@ -184,6 +215,12 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 	Aimbot(pInput);
 
 	ApplyRecoilControl(pInput);
+	std::swap(CurrentChickenList, NextChickenList);
+
+	SilentAim(pCmd);
+	Aimbot(pInput);
+	ApplyRecoilControl(pInput);
+
 	return bResult;
 }
 

@@ -54,6 +54,21 @@ struct WeaponEntity
 
 };
 
+struct ChickenEntity
+{
+	struct CChicken
+	{
+		Vector_t WorldPosition{ 0, 0, 0 };
+		Vector4D_t Rectangle;
+		CBone BoneData;
+		bool isVisible = false;
+		std::string Name;
+
+	}Chicken;
+};
+
+
+
 
 inline std::vector<PlayerEntity> ActivePlayersA, ActivePlayersB;
 inline std::vector<PlayerEntity>* CurrentPlayerList = &ActivePlayersA, * NextPlayerList = &ActivePlayersB;
@@ -63,6 +78,10 @@ inline std::unique_ptr<PlayerEntity> cPlayerEntity = std::make_unique<PlayerEnti
 inline std::vector<WeaponEntity> WeaponListA, WeaponListB;
 inline std::vector<WeaponEntity>* CurrentWeaponList = &WeaponListA, * NextWeaponList = &WeaponListB;
 inline std::unique_ptr<WeaponEntity> cWeaponEntity = std::make_unique<WeaponEntity>();
+
+inline std::vector<ChickenEntity> ChickenListA, ChickenListB;
+inline std::vector<ChickenEntity>* CurrentChickenList = &ChickenListA, * NextChickenList = &ChickenListB;
+inline std::unique_ptr<ChickenEntity> CurrentChickenEntity = std::make_unique<ChickenEntity>();
 
 class CEntityIdentity
 {
@@ -169,9 +188,9 @@ public:
 
 struct CUtlVector
 {
-	int count;               
-	int pad;                 
-	QAngle_t* data;          
+	int count;
+	int pad;
+	QAngle_t* data;
 };
 
 class C_CSPlayerPawn : public C_CSPlayerPawnBase
@@ -265,5 +284,15 @@ public:
 class CSkeletonInstance : public CGameSceneNode
 {
 public:
+
+};
+
+
+
+class C_Chicken : public C_BaseEntity
+{
+public:
+	Vector_t GetEyePosition();
+	bool ChickenVisible(C_CSPlayerPawn* Local, C_Chicken* Enemy);
 
 };

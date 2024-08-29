@@ -177,6 +177,16 @@ VOID __fastcall RenderESP()
 		}
 	}
 
+	for (const auto& Entity : *CurrentChickenList)
+	{
+		ImVec2 Rect_MinChicken = ImVec2(Entity.Chicken.Rectangle.x, Entity.Chicken.Rectangle.y);
+		ImVec2 Rect_MaxChicken = ImVec2(Entity.Chicken.Rectangle.x + Entity.Chicken.Rectangle.z, Entity.Chicken.Rectangle.y + Entity.Chicken.Rectangle.w);
+		DrawCustomBox(Rect_MinChicken, Rect_MaxChicken, Entity.Chicken.isVisible ? MenuConfig::BoxColorVisible : MenuConfig::BoxColorNotVisible, MenuConfig::BoxThickness);
+		ImVec2 TextSize = ImGui::CalcTextSize(Entity.Chicken.Name.c_str());
+		ImVec2 TextPos = { Entity.Chicken.Rectangle.x + Entity.Chicken.Rectangle.z / 2 - TextSize.x / 2, Entity.Chicken.Rectangle.y - 16 };
+		ImGui::GetForegroundDrawList()->AddText(TextPos, MenuConfig::NameColor, Entity.Chicken.Name.c_str());
+	}
+
 	ImGui::PopFont();
 
 	for (const auto& Entity : *CurrentWeaponList)
