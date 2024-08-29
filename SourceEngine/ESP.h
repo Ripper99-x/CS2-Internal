@@ -3,11 +3,10 @@
 #include "W2S.h"
 #include "map"
 #include "Utils/Interfaces.h"
+#include "chrono"
 
 
 Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height);
-void DrawCustomBox(const ImVec2& rect_min, const ImVec2& rect_max, const ImColor& boxColor, float borderThickness, bool is3D);
-void DrawHealthBar(float MaxHealth, float CurrentHealth, ImVec2 Pos, ImVec2 Size, bool Horizontal);
 inline ImFont* CustomFontWeapon;
 VOID __fastcall RenderESP();
 

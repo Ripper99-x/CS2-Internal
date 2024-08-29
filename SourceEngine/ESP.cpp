@@ -1,6 +1,7 @@
 #include "ESP.h"
 #include "iEngineClient.h"
 
+
 Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height)
 {
 	Vector_t TopPos3D;
@@ -31,24 +32,27 @@ inline void DrawCustomBox(const ImVec2& rect_min, const ImVec2& rect_max, const 
 {
 	ImDrawList* draw_list = ImGui::GetBackgroundDrawList();
 
-	ImVec2 shadowOffset(2.0f, 2.0f);
-	ImColor shadowColor(0, 0, 0, 50);
-
+	ImVec2 shadowOffset(3.0f, 3.0f);
 	ImVec2 shadow_rect_min(rect_min.x + shadowOffset.x, rect_min.y + shadowOffset.y);
 	ImVec2 shadow_rect_max(rect_max.x + shadowOffset.x, rect_max.y + shadowOffset.y);
+	ImColor shadowColor(0, 0, 0, 100);
 
 	draw_list->AddRect(shadow_rect_min, shadow_rect_max, shadowColor, rounding, 0, borderThickness);
 
-	ImColor innerBorderColor = ImColor(255, 255, 255, 60);
-	float innerBorderThickness = borderThickness / 2.0f;
-
-	ImVec2 inner_rect_min(rect_min.x + innerBorderThickness, rect_min.y + innerBorderThickness);
-	ImVec2 inner_rect_max(rect_max.x - innerBorderThickness, rect_max.y - innerBorderThickness);
-
 	draw_list->AddRect(rect_min, rect_max, boxColor, rounding, 0, borderThickness);
 
-	draw_list->AddRect(inner_rect_min, inner_rect_max, innerBorderColor, rounding, 0, innerBorderThickness);
+	float innerOffset = 1.5f;
+	ImVec2 inner_rect_min(rect_min.x + innerOffset, rect_min.y + innerOffset);
+	ImVec2 inner_rect_max(rect_max.x - innerOffset, rect_max.y - innerOffset);
+	ImColor innerBorderColor(150, 150, 150, 200);  
+	draw_list->AddRect(inner_rect_min, inner_rect_max, innerBorderColor, rounding, 0, borderThickness * 0.5f);
+
+	ImColor accentColor(255, 255, 255, 150); 
+	draw_list->AddLine(ImVec2(rect_min.x, rect_min.y), ImVec2(rect_max.x, rect_min.y), accentColor, borderThickness * 0.5f);
+
+	draw_list->AddLine(ImVec2(rect_min.x, rect_max.y), ImVec2(rect_max.x, rect_max.y), accentColor, borderThickness * 0.5f);
 }
+
 
 
 inline void DrawHealthBar(float MaxHealth, float CurrentHealth, ImVec2 Pos, ImVec2 Size, bool Horizontal)
@@ -219,5 +223,65 @@ VOID __fastcall RenderESP()
 			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - TextSize.x * 0.5f, ScreenPosition.y - TextSize.y * 0.5f), MenuConfig::ItemColor, WeaponIcon.c_str());
 			ImGui::PopFont();
 		}
+	}
+
+	for (auto it = ActiveInfernoEntities.begin(); it != ActiveInfernoEntities.end();)
+	{
+		auto& [id, Entity] = *it;
+
+		C_Inferno* Molotov = reinterpret_cast<C_Inferno*>(Entity.Inferno.Base);
+
+		if (!Molotov || !Molotov->IsBurning()) {
+			it = ActiveInfernoEntities.erase(it);
+			continue;
+		}
+
+		auto Now = std::chrono::steady_clock::now();
+		auto ElapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(Now - Entity.StartTime).count();
+		int TotalDuration = 7000;
+		int RemainingTime = TotalDuration - ElapsedTime;
+
+		if (RemainingTime <= 0)
+		{
+			it = ActiveInfernoEntities.erase(it);
+			continue;
+		}
+
+		std::string WeaponIcon = GunIcon("MolotovGrenade");
+		ImVec2 TextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
+
+		Vector2D_t ScreenPosition;
+
+		if (!View.WorldToScreen(Entity.Inferno.WorldPosition, ScreenPosition)) {
+			++it;
+			continue;
+		}
+
+		if (ScreenPosition.x < 0.0f || ScreenPosition.x > ImGui::GetIO().DisplaySize.x ||
+			ScreenPosition.y < 0.0f || ScreenPosition.y > ImGui::GetIO().DisplaySize.y) {
+			++it;
+			continue;
+		}
+
+		if (Entity.Inferno.WorldPosition.x == 0 || Entity.Inferno.WorldPosition.y == 0 || Entity.Inferno.WorldPosition.z == 0) {
+			++it;
+			continue;
+		}
+
+		ImGui::PushFont(ProjectileFont);
+		ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - TextSize.x * 0.5f, ScreenPosition.y - TextSize.y * 0.5f), MenuConfig::WeaponColor, WeaponIcon.c_str());
+		ImGui::PopFont();
+
+		float BarWidth = TextSize.x * 20.0f;
+		float Progress = static_cast<float>(RemainingTime) / static_cast<float>(TotalDuration);
+		ImVec2 BarPos = ImVec2(ScreenPosition.x - BarWidth * 0.5f + TextSize.x * 0.2f, ScreenPosition.y - TextSize.y - 5.0f);
+		ImVec2 BarEndPos = ImVec2(BarPos.x + BarWidth * Progress, BarPos.y + 5.0f);
+
+		ImU32 BarColor = ImColor::HSV(Progress * 0.33f, 1.0f, 1.0f);
+
+		ImGui::GetForegroundDrawList()->AddRectFilled(BarPos, BarEndPos, BarColor);
+		ImGui::GetForegroundDrawList()->AddRect(BarPos, ImVec2(BarPos.x + BarWidth, BarEndPos.y), IM_COL32(255, 255, 255, 255));
+
+		++it;
 	}
 }

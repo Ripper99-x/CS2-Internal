@@ -4,6 +4,7 @@
 extern Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height);
 extern VOID ApplyRecoilControl(CCSGOInput* Input);
 
+
 static const std::unordered_map<std::string, size_t> ClassTrimMap =
 {
 		{"C_Knife", 2},
@@ -141,6 +142,39 @@ inline ChickenEntity ChickenEntities(C_BaseEntity* pEntity)
 }
 
 
+inline InfernoEntity InfernoEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
+{
+	if (FNV1A::Hash(pClassInfo->szName) != FNV1A::HashConst("C_Inferno"))
+		return {};
+
+	C_Inferno* Molotov = reinterpret_cast<C_Inferno*>(pEntity);
+
+	if (Molotov == nullptr)
+		return {};
+
+	int EntityID = reinterpret_cast<int>(pEntity);
+
+	if (Molotov->IsBurning())
+	{
+		auto& Entity = ActiveInfernoEntities[EntityID];
+		Entity.Inferno.WorldPosition = Molotov->GetFirePositions();
+		Entity.Inferno.Base = Molotov;
+
+		if (Entity.StartTime == std::chrono::steady_clock::time_point())
+		{
+			Entity.StartTime = std::chrono::steady_clock::now();
+			Entity.UniqueInfernoID = NextInfernoID++;
+		}
+
+		return Entity;
+	}
+	else
+	{
+		ActiveInfernoEntities.erase(EntityID);
+		return {};
+	}
+}
+
 bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 {
 	NextPlayerList->clear();
@@ -182,6 +216,8 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 
 		std::string ClassName = pClassInfo->szName;
 
+		InfernoEntities(pEntity, pClassInfo);
+
 		if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("CCSPlayerController"))
 		{
 			PlayerEntity Entity = PlayerEntities(pEntity);
@@ -198,6 +234,7 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 				NextChickenList->push_back(Entity);
 		}
 
+
 		else if (ClassName.find("C_") == 0 || ClassName.find("CBaseAnimGraph") == 0)
 		{
 			WeaponEntity Entity = WeaponEntities(pEntity, pClassInfo);
@@ -210,11 +247,6 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 
 	std::swap(CurrentPlayerList, NextPlayerList);
 	std::swap(CurrentWeaponList, NextWeaponList);
-
-	SilentAim(pCmd);
-	Aimbot(pInput);
-
-	ApplyRecoilControl(pInput);
 	std::swap(CurrentChickenList, NextChickenList);
 
 	SilentAim(pCmd);

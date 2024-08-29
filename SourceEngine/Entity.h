@@ -6,6 +6,8 @@
 #include "Utils/cVector.h"
 #include "Bones.h"
 #include <memory>
+#include "chrono"
+
 
 class CEntityIdentity;
 class CBaseHandle;
@@ -20,6 +22,7 @@ class CBasePlayerController;
 class CCSPlayerController;
 class CEntityInstance;
 class C_CSWeaponBase;
+class C_Inferno;
 
 inline SchemaClassInfoData_t* pClassInfo;
 
@@ -67,7 +70,22 @@ struct ChickenEntity
 	}Chicken;
 };
 
+struct InfernoEntity
+{
+	int UniqueInfernoID;
+	std::chrono::steady_clock::time_point StartTime;
 
+	struct InfernoDetails
+	{
+		C_Inferno* Base;
+		Vector_t WorldPosition{ 0, 0, 0 };
+		bool isBurning = false;
+	} Inferno;
+};
+
+
+inline std::unordered_map<int, InfernoEntity> ActiveInfernoEntities;
+inline int NextInfernoID = 0;
 
 
 inline std::vector<PlayerEntity> ActivePlayersA, ActivePlayersB;
@@ -82,6 +100,7 @@ inline std::unique_ptr<WeaponEntity> cWeaponEntity = std::make_unique<WeaponEnti
 inline std::vector<ChickenEntity> ChickenListA, ChickenListB;
 inline std::vector<ChickenEntity>* CurrentChickenList = &ChickenListA, * NextChickenList = &ChickenListB;
 inline std::unique_ptr<ChickenEntity> CurrentChickenEntity = std::make_unique<ChickenEntity>();
+
 
 class CEntityIdentity
 {
@@ -295,4 +314,13 @@ public:
 	Vector_t GetEyePosition();
 	bool ChickenVisible(C_CSPlayerPawn* Local, C_Chicken* Enemy);
 
+};
+
+class C_Inferno : public C_BaseEntity
+{
+public:
+	SCHEMA_ADD_FIELD(bool, IsBurning, "C_Inferno->m_bFireIsBurning");
+	SCHEMA_ADD_FIELD(Vector_t, GetMinBounds, "C_Inferno->m_minBounds");
+	SCHEMA_ADD_FIELD(Vector_t, GetMaxBounds, "C_Inferno->m_maxBounds");
+	SCHEMA_ADD_FIELD(Vector_t, GetFirePositions, "C_Inferno->m_firePositions");
 };
