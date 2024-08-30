@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 
-VOID ApplyRecoilControl(CCSGOInput* Input)
+VOID Recoil(CCSGOInput* Input)
 {
     if (!MenuConfig::StandloneRCS)
         return;

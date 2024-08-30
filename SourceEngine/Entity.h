@@ -7,7 +7,7 @@
 #include "Bones.h"
 #include <memory>
 #include "chrono"
-
+#include "Colors.h"
 
 class CEntityIdentity;
 class CBaseHandle;
@@ -23,8 +23,12 @@ class CCSPlayerController;
 class CEntityInstance;
 class C_CSWeaponBase;
 class C_Inferno;
+class C_EnvSky;
+class C_SmokeGrenadeProjectile;
 
 inline SchemaClassInfoData_t* pClassInfo;
+inline C_EnvSky* g_pEnvSky = nullptr; 
+inline C_SmokeGrenadeProjectile* g_pSmokeGrenadeProjectile = nullptr;
 
 struct PlayerEntity
 {
@@ -323,4 +327,38 @@ public:
 	SCHEMA_ADD_FIELD(Vector_t, GetMinBounds, "C_Inferno->m_minBounds");
 	SCHEMA_ADD_FIELD(Vector_t, GetMaxBounds, "C_Inferno->m_maxBounds");
 	SCHEMA_ADD_FIELD(Vector_t, GetFirePositions, "C_Inferno->m_firePositions");
+};
+
+class cAggregateSceneObject
+{
+public:
+	unsigned char Padding[0xE4];
+	float R;
+	float G;
+	float B;
+};
+
+
+class C_EnvSky 
+{
+public:
+	SCHEMA_ADD_FIELD(bool, m_bStartDisabled, "C_EnvSky->m_bStartDisabled");
+	SCHEMA_ADD_FIELD(Color_t, m_vTintColor, "C_EnvSky->m_vTintColor");
+	SCHEMA_ADD_FIELD(Color_t, m_vTintColorLightingOnly, "C_EnvSky->m_vTintColorLightingOnly");
+	SCHEMA_ADD_FIELD(float, m_flBrightnessScale, "C_EnvSky->m_flBrightnessScale");
+	SCHEMA_ADD_FIELD(int, m_nFogType, "C_EnvSky->m_nFogType");
+	SCHEMA_ADD_FIELD(float, m_flFogMinStart, "C_EnvSky->m_flFogMinStart");
+	SCHEMA_ADD_FIELD(float, m_flFogMinEnd, "C_EnvSky->m_flFogMinEnd");
+	SCHEMA_ADD_FIELD(float, m_flFogMaxStart, "C_EnvSky->m_flFogMaxStart");
+	SCHEMA_ADD_FIELD(float, m_flFogMaxEnd, "C_EnvSky->m_flFogMaxEnd");
+	SCHEMA_ADD_FIELD(bool, m_bEnabled, "C_EnvSky->m_bEnabled");
+
+};
+
+
+class C_SmokeGrenadeProjectile
+{
+public:
+
+	SCHEMA_ADD_FIELD(Vector_t, m_vSmokeColor, "C_SmokeGrenadeProjectile->m_vSmokeColor");
 };

@@ -2,7 +2,7 @@
 #include "W2S.h"
 
 extern Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height);
-extern VOID ApplyRecoilControl(CCSGOInput* Input);
+extern VOID Recoil(CCSGOInput* Input);
 
 
 static const std::unordered_map<std::string, size_t> ClassTrimMap =
@@ -24,72 +24,74 @@ static const std::unordered_map<std::string, size_t> ClassTrimMap =
 
 };
 
-inline PlayerEntity PlayerEntities(C_BaseEntity* pEntity)
+inline void PlayerEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo) 
 {
+	if (FNV1A::Hash(pClassInfo->szName) != FNV1A::HashConst("CCSPlayerController"))
+		return;
+
 	CCSPlayerController* Controller = reinterpret_cast<CCSPlayerController*>(pEntity);
 
 	if (Controller == nullptr || Controller->IsLocalPlayerController())
-		return {};
+		return;
 
 	C_CSPlayerPawn* Pawn = I::GameResourceService->pGameEntitySystem->Get<C_CSPlayerPawn>(Controller->GetPawnHandle());
 
 	if (Pawn == nullptr)
-		return {};
+		return;
 
 	if (Pawn->GetHealth() == 0 && !Controller->IsPawnAlive())
-		return {};
+		return;
 
 	if (!Pawn->IsOtherEnemy())
-		return {};
+		return;
 
 	CGameSceneNode* GameSceneNode = Pawn->GetGameSceneNode();
-
 	if (GameSceneNode == nullptr)
-		return {};
+		return;
 
 	CSkeletonInstance* Skeleton = GameSceneNode->GetSkeletonInstance();
-
 	if (Skeleton == nullptr)
-		return {};
-
+		return;
 
 	C_CSWeaponBase* CSWeaponBase = Pawn->CSWeaponBase();
 
 	if (CSWeaponBase == nullptr)
-		return {};
-
+		return;
 
 	CBoneData Bones;
+	PlayerEntity Entity;
 
-	cPlayerEntity->Controller.m_sSanitizedPlayerName = Controller->GetPlayerName();
-	cPlayerEntity->Pawn.Health = Pawn->GetHealth();
-	cPlayerEntity->Pawn.m_vOldOrigin = Pawn->GetOrigin();
-	cPlayerEntity->Pawn.isVisible = Pawn->EyeVisible(SDK::LocalPawn, Pawn);
-	cPlayerEntity->Pawn.CSWeaponBase = CSWeaponBase;
+	Entity.Controller.m_sSanitizedPlayerName = Controller->GetPlayerName();
+	Entity.Pawn.Health = Pawn->GetHealth();
+	Entity.Pawn.m_vOldOrigin = Pawn->GetOrigin();
+	Entity.Pawn.isVisible = Pawn->EyeVisible(SDK::LocalPawn, Pawn);
+	Entity.Pawn.CSWeaponBase = CSWeaponBase;
 
-	cPlayerEntity->Pawn.Rectangle = Get2DBox(cPlayerEntity->Pawn.m_vOldOrigin, 75.0f);
-	cPlayerEntity->Pawn.BoneData.BonePositions.clear();
-	cPlayerEntity->Pawn.BoneData.BonePositions.resize(30);
+	Entity.Pawn.Rectangle = Get2DBox(Entity.Pawn.m_vOldOrigin, 75.0f);
+	Entity.Pawn.BoneData.BonePositions.clear();
+	Entity.Pawn.BoneData.BonePositions.resize(104);
 
-	for (const auto& BoneList : BoneJointList::List)
-	{
-		for (const auto& BoneIndex : BoneList)
-		{
+	for (const auto& BoneList : BoneJointList::List) {
+		for (const auto& BoneIndex : BoneList) {
+			if (BoneIndex >= Entity.Pawn.BoneData.BonePositions.size())
+				continue;
+
 			GetBone(Skeleton, Bones, BoneIndex);
 			BonePosition Position;
 			Position.Location = Bones.Location;
 			Position.WorldVisible = View.WorldToScreen(Bones.Location, Position.ScreenPosition);
 			Position.RayTraceVisible = Pawn->BoneVisible(SDK::LocalPawn, Pawn, Position.Location);
-			cPlayerEntity->Pawn.BoneData.BonePositions[BoneIndex] = Position;
+			Entity.Pawn.BoneData.BonePositions[BoneIndex] = Position;
 		}
 	}
 
-	return *cPlayerEntity;
+	NextPlayerList->push_back(Entity);
 }
 
 
-inline WeaponEntity WeaponEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
+inline VOID WeaponEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
 {
+
 	std::string ClassName = pClassInfo->szName;
 
 	for (const auto& [key, trimLength] : ClassTrimMap)
@@ -102,55 +104,58 @@ inline WeaponEntity WeaponEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t*
 			C_CSWeaponBase* CSWeaponBase = reinterpret_cast<C_CSWeaponBase*>(pEntity);
 
 			if (CSWeaponBase == nullptr)
-				return {};
+				return;
 
 			CGameSceneNode* GameSceneNode = CSWeaponBase->GetGameSceneNode();
 
 			if (GameSceneNode == nullptr)
-				return {};
+				return;
 
 			cWeaponEntity->isWeapon = CSWeaponBase->IsWeapon();
 			cWeaponEntity->WorldPosition = GameSceneNode->GetOrigin();
 			cWeaponEntity->CSWeaponBase = CSWeaponBase;
 
-			return *cWeaponEntity;
+			NextWeaponList->push_back(*cWeaponEntity);
 		}
 	}
 
-	return {};
 }
 
 
-inline ChickenEntity ChickenEntities(C_BaseEntity* pEntity)
+inline VOID ChickenEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
 {
+
+	if (FNV1A::Hash(pClassInfo->szName) != FNV1A::HashConst("C_Chicken"))
+		return;
+
 	C_Chicken* CChicken = reinterpret_cast<C_Chicken*>(pEntity);
 
 	if (CChicken == nullptr)
-		return {};
+		return;
 
 	CGameSceneNode* GameSceneNode = CChicken->GetGameSceneNode();
 
 	if (GameSceneNode == nullptr)
-		return {};
+		return;
 
 	CurrentChickenEntity->Chicken.Name = "Chicken";
 	CurrentChickenEntity->Chicken.WorldPosition = GameSceneNode->GetOrigin();
 	CurrentChickenEntity->Chicken.isVisible = CChicken->ChickenVisible(SDK::LocalPawn, CChicken);
 	CurrentChickenEntity->Chicken.Rectangle = Get2DBox(CurrentChickenEntity->Chicken.WorldPosition, 25.0f);
 
-	return *CurrentChickenEntity;
+	NextChickenList->push_back(*CurrentChickenEntity);
 }
 
 
-inline InfernoEntity InfernoEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
+inline VOID InfernoEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo)
 {
 	if (FNV1A::Hash(pClassInfo->szName) != FNV1A::HashConst("C_Inferno"))
-		return {};
+		return;
 
 	C_Inferno* Molotov = reinterpret_cast<C_Inferno*>(pEntity);
 
 	if (Molotov == nullptr)
-		return {};
+		return;
 
 	int EntityID = reinterpret_cast<int>(pEntity);
 
@@ -165,21 +170,47 @@ inline InfernoEntity InfernoEntities(C_BaseEntity* pEntity, SchemaClassInfoData_
 			Entity.StartTime = std::chrono::steady_clock::now();
 			Entity.UniqueInfernoID = NextInfernoID++;
 		}
-
-		return Entity;
 	}
 	else
 	{
 		ActiveInfernoEntities.erase(EntityID);
-		return {};
+		return;
 	}
+
+}
+
+VOID SkyBox(C_EnvSky* eSky)
+{
+	if (MenuConfig::LightChanger == false || eSky == nullptr)
+		return;
+
+	eSky->m_vTintColorLightingOnly() = Color_t(
+		MenuConfig::g_SkyboxColor.x * 255.f,
+		MenuConfig::g_SkyboxColor.y * 255.f,
+		MenuConfig::g_SkyboxColor.z * 255.f,
+		MenuConfig::g_SkyboxColor.w * 255.f
+	);
+
+	eSky->m_vTintColor() = Color_t(
+		MenuConfig::g_SkyboxColor.x * 255.f,
+		MenuConfig::g_SkyboxColor.y * 255.f,
+		MenuConfig::g_SkyboxColor.z * 255.f,
+		MenuConfig::g_SkyboxColor.w * 255.f
+	);
+
+	OriginalUpdateSkybox(eSky);
+}
+
+VOID SmokeColor(C_SmokeGrenadeProjectile* Smoke)
+{
+	if (MenuConfig::EnableSmokeColor && Smoke != nullptr)
+		Smoke->m_vSmokeColor() = MenuConfig::SmokeColorPicker;
+	
 }
 
 bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 {
-	NextPlayerList->clear();
-	NextWeaponList->clear();
-	NextChickenList->clear();
+	NextPlayerList->clear(), NextWeaponList->clear(), NextChickenList->clear();
 
 	const bool bResult = FakeReturnAddress(Offsets->GameData.ReturnAddress, CreateMove, pInput, nSlot, bActive);
 
@@ -214,46 +245,38 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 		if (pClassInfo == nullptr)
 			continue;
 
-		std::string ClassName = pClassInfo->szName;
-
+		PlayerEntities(pEntity, pClassInfo);
+		WeaponEntities(pEntity, pClassInfo);
+		ChickenEntities(pEntity, pClassInfo);
 		InfernoEntities(pEntity, pClassInfo);
 
-		if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("CCSPlayerController"))
-		{
-			PlayerEntity Entity = PlayerEntities(pEntity);
-
-			if (!Entity.Controller.m_sSanitizedPlayerName.empty())
-				NextPlayerList->push_back(Entity);
-		}
-
-		else if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("C_Chicken"))
-		{
-			ChickenEntity Entity = ChickenEntities(pEntity);
-
-			if (Entity.Chicken.WorldPosition != Vector_t{ 0, 0, 0 })
-				NextChickenList->push_back(Entity);
-		}
-
-
-		else if (ClassName.find("C_") == 0 || ClassName.find("CBaseAnimGraph") == 0)
-		{
-			WeaponEntity Entity = WeaponEntities(pEntity, pClassInfo);
-
-			if (!Entity.Name.empty())
-				NextWeaponList->push_back(Entity);
-		}
-
+		if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("C_EnvSky"))
+			g_pEnvSky = reinterpret_cast<C_EnvSky*>(pEntity);
+	
+		if (FNV1A::Hash(pClassInfo->szName) == FNV1A::HashConst("C_SmokeGrenadeProjectile"))
+			g_pSmokeGrenadeProjectile = reinterpret_cast<C_SmokeGrenadeProjectile*>(pEntity);
+		
 	}
 
-	std::swap(CurrentPlayerList, NextPlayerList);
-	std::swap(CurrentWeaponList, NextWeaponList);
-	std::swap(CurrentChickenList, NextChickenList);
+	std::swap(CurrentPlayerList, NextPlayerList), std::swap(CurrentWeaponList, NextWeaponList), std::swap(CurrentChickenList, NextChickenList);
 
+	SkyBox(g_pEnvSky);
+	SmokeColor(g_pSmokeGrenadeProjectile);
 	SilentAim(pCmd);
 	Aimbot(pInput);
-	ApplyRecoilControl(pInput);
+	Recoil(pInput);
 
 	return bResult;
 }
 
 
+
+void __fastcall hkLightingModulation(__int64 a1, cAggregateSceneObject* SceneObject, __int64 a3)
+{
+
+	SceneObject->R = MenuConfig::wModulation.LightingColor.x * MenuConfig::wModulation.LightingIntensity;
+	SceneObject->G = MenuConfig::wModulation.LightingColor.y * MenuConfig::wModulation.LightingIntensity;
+	SceneObject->B = MenuConfig::wModulation.LightingColor.z * MenuConfig::wModulation.LightingIntensity;
+
+	return oLightingModulation(a1, SceneObject, a3);
+}

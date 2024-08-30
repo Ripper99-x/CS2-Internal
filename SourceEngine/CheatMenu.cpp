@@ -120,12 +120,60 @@ VOID MenuAimBot()
 
 
 
-VOID Movement()
-{
-    ImGui::Checkbox(xorstr_("Bunnyhop"), &MenuConfig::BunnyHop);
-    ImGui::Checkbox(xorstr_("Auto Strafe"), &MenuConfig::AutoStrafe);
-}
 
+
+VOID Miscellaneous()
+{
+    ImGui::Checkbox("Light Changer", &MenuConfig::LightChanger);
+
+    if (MenuConfig::LightChanger)
+    {
+        ImGui::Begin("Miscellaneous Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+        ImGui::PushItemWidth(220.0f);
+
+        // Section: Lighting Settings
+        ImGui::Text("Lighting Settings:");
+        ImGui::Separator();
+
+        ImGui::Text("Color:");
+        ImGui::SameLine();
+        ImGui::ColorEdit4("##LightingColor", (float*)&MenuConfig::wModulation.LightingColor, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
+
+        ImGui::Text("Intensity:");
+        ImGui::SameLine();
+        ImGui::SliderFloat("##LightingIntensity", &MenuConfig::wModulation.LightingIntensity, -10.0f, 10.0f);
+
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        ImGui::Text("Skybox Color Settings:");
+        ImGui::Separator();
+
+        static float hue = 0.0f;
+
+        ImGui::SliderFloat("Hue", &hue, 0.0f, 1.0f, "%.2f");
+
+        ImVec4 rgbColor = ImColor::HSV(hue, 1.0f, 1.0f);  // Full saturation and brightness
+
+        MenuConfig::g_SkyboxColor.x = rgbColor.x;
+        MenuConfig::g_SkyboxColor.y = rgbColor.y;
+        MenuConfig::g_SkyboxColor.z = rgbColor.z;
+
+        ImGui::PopItemWidth();
+        ImGui::End();
+    }
+
+    ImGui::Text("Smoke Color Settings:");
+    ImGui::Separator();
+
+    ImGui::Checkbox("Enable Smoke Color", &MenuConfig::EnableSmokeColor);
+
+    if (MenuConfig::EnableSmokeColor)
+        ImGui::ColorEdit4("##SmokeColorPicker", (float*)&MenuConfig::SmokeColorPicker);
+
+
+}
 
 VOID __fastcall RenderUI()
 {
@@ -153,28 +201,30 @@ VOID __fastcall RenderUI()
 
     if (MenuConfig::ShowMenu)
     {
+
+        ImVec2 MenuSize = ImVec2(1000, 1000);
+
         ImGui::Begin(xorstr_("CS2 INTERNAL"), nullptr, WindowFlags);
 
         if (ImGui::Button(xorstr_("ESP"), ImVec2(185, 0))) MenuConfig::MenuState = 1;
         ImGui::SameLine();
         if (ImGui::Button(xorstr_("Aimbot"), ImVec2(185, 0))) MenuConfig::MenuState = 2;
         ImGui::SameLine();
-        if (ImGui::Button(xorstr_("Movement"), ImVec2(215, 0))) MenuConfig::MenuState = 3;
+        if (ImGui::Button(xorstr_("Miscellaneous"), ImVec2(215, 0))) MenuConfig::MenuState = 3;
 
-        ImVec2 menuSize = ImVec2(650, 5570);
         switch (MenuConfig::MenuState)
         {
         case 1:
-            ImGui::SetWindowSize(menuSize);
+            ImGui::SetWindowSize(MenuSize);
             MenuESP();
             break;
         case 2:
-            ImGui::SetWindowSize(menuSize);
+            ImGui::SetWindowSize(MenuSize);
             MenuAimBot();
             break;
         case 3:
-            ImGui::SetWindowSize(menuSize);
-            Movement();
+            ImGui::SetWindowSize(MenuSize);
+            Miscellaneous();
             break;
         default:
             break;

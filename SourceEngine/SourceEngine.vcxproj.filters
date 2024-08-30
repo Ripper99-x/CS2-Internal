@@ -227,6 +227,9 @@
     <ClInclude Include="Recoil.h">
       <Filter>Features</Filter>
     </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Utils\spoofer_stub.asm">

@@ -39,14 +39,21 @@ namespace MenuConfig
 	inline float RCS_Y = 2.0f;
 	inline float RCS_X = 2.0f;
 	inline bool ClosestBone = false;
+	inline int CurrentBoneIndex = 6;
 	inline float FOV = 100.0f;;
 	inline bool ShowMenu = true;
-	inline int  BoxType = 0;
 	inline int MenuState = 1;
-	inline bool ShowArmor = false;
-	inline bool RapidFire = false;
 	inline bool ShowTimer = true;
-	inline int CurrentBoneIndex = 6;
+	inline bool LightChanger = false;
+	inline bool EnableSmokeColor = false;
+	inline ImVec4 g_SkyboxColor = ImVec4(1.0f, 0.75f, 0.8f, 1.0f);
+	inline Vector_t SmokeColorPicker = Vector_t(1.0f, 0.0f, 0.0f); // Default to red
+	inline struct WorldModulation
+	{
+		ImVec4 LightingColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); 
+		float LightingIntensity = 1.0f; 
+	} wModulation;
+
 
 }
 

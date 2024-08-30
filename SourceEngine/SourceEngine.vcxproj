@@ -169,6 +169,7 @@
     <ClInclude Include="CCSGOInput.h" />
     <ClInclude Include="cGameEntitySystem.h" />
     <ClInclude Include="CheatMenu.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityHandle.h" />

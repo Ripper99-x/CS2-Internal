@@ -9,8 +9,11 @@
 #include "Utils/Interfaces.h"
 #include "cGameEntitySystem.h"
 #include "Aimbot.h"
+#include "detour.h"
+
 
 extern bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive);
+extern void __fastcall hkLightingModulation(__int64 a1, cAggregateSceneObject* SceneObject, __int64 a3);
 
 namespace Hooks
 {
@@ -27,5 +30,15 @@ namespace Hooks
 		*reinterpret_cast<void**>(dwCSGOInput) = NewInputClass;
 		*reinterpret_cast<void**>(NewInputClass) = NewInputVT;
 
+	}
+
+	inline VOID Detours()
+	{
+		oLightingModulation = (LightingModulationHook_t)Offsets->GameData.WorldModulation;
+
+		DetourTransactionBegin();
+		DetourUpdateThread(GetCurrentThread());
+		DetourAttach(&(PVOID&)oLightingModulation, hkLightingModulation);
+		DetourTransactionCommit();
 	}
 }

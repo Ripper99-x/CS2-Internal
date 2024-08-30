@@ -6,11 +6,12 @@
 
 enum BONEINDEX : DWORD
 {
-    Head = 6,
-    Neck_0 = 5,
-    Spine_1 = 4,
-    Spine_2 = 2,
     Pelvis = 0,
+    Spine_1 = 2,
+    Spine_2 = 3,
+    Spine_3 = 4,
+    Neck_0 = 5,
+    Head = 6,
     Arm_Upper_L = 8,
     Arm_Lower_L = 9,
     Hand_L = 10,
@@ -23,13 +24,6 @@ enum BONEINDEX : DWORD
     Leg_Upper_R = 25,
     Leg_Lower_R = 26,
     Ankle_R = 27,
-};
-
-
-struct BoneJointData
-{
-    Vector_t Pos;
-    char pad[0x14];
 };
 
 
@@ -51,16 +45,21 @@ struct CBoneData
 {
     Vector_t Location;
     float Scale;
-    char Padding[0x16];  // 0x10 (16 bytes) for a quaternion
+    char Padding[0x16];
 };
 
 namespace BoneJointList
 {
-    inline std::list<DWORD> Trunk = { Head, Neck_0, Spine_2, Pelvis };
-    inline std::list<DWORD> LeftArm = { Neck_0, Arm_Upper_L, Arm_Lower_L, Hand_L };
-    inline std::list<DWORD> RightArm = { Neck_0, Arm_Upper_R, Arm_Lower_R, Hand_R };
-    inline std::list<DWORD> LeftLeg = { Pelvis, Leg_Upper_L, Leg_Lower_L, Ankle_L };
-    inline std::list<DWORD> RightLeg = { Pelvis, Leg_Upper_R, Leg_Lower_R, Ankle_R };
-    inline std::vector<std::list<DWORD>> List = { Trunk, LeftArm, RightArm, LeftLeg, RightLeg };
+    inline std::list<DWORD> Trunk = { Pelvis, Spine_1, Spine_2, Spine_3, Neck_0, Head };
 
-};
+    inline std::list<DWORD> LeftArm = { Spine_3, Arm_Upper_L, Arm_Lower_L, Hand_L };
+
+    inline std::list<DWORD> RightArm = { Spine_3, Arm_Upper_R, Arm_Lower_R, Hand_R };
+
+    inline std::list<DWORD> LeftLeg = { Pelvis, Leg_Upper_L, Leg_Lower_L, Ankle_L };
+
+    inline std::list<DWORD> RightLeg = { Pelvis, Leg_Upper_R, Leg_Lower_R, Ankle_R };
+
+
+    inline std::vector<std::list<DWORD>> List = { Trunk, LeftArm, RightArm, LeftLeg, RightLeg};
+}

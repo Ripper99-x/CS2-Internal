@@ -28,30 +28,27 @@ Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height)
 }
 
 
-inline void DrawCustomBox(const ImVec2& rect_min, const ImVec2& rect_max, const ImColor& boxColor, float borderThickness, float rounding = 5.0f)
+inline void DrawCustomBox(const ImVec2& rect_min, const ImVec2& rect_max, const ImColor& boxColor, float borderThickness, float cornerLength = 10.0f)
 {
 	ImDrawList* draw_list = ImGui::GetBackgroundDrawList();
 
-	ImVec2 shadowOffset(3.0f, 3.0f);
-	ImVec2 shadow_rect_min(rect_min.x + shadowOffset.x, rect_min.y + shadowOffset.y);
-	ImVec2 shadow_rect_max(rect_max.x + shadowOffset.x, rect_max.y + shadowOffset.y);
-	ImColor shadowColor(0, 0, 0, 100);
+	// Top Left Corner
+	draw_list->AddLine(ImVec2(rect_min.x, rect_min.y), ImVec2(rect_min.x + cornerLength, rect_min.y), boxColor, borderThickness);
+	draw_list->AddLine(ImVec2(rect_min.x, rect_min.y), ImVec2(rect_min.x, rect_min.y + cornerLength), boxColor, borderThickness);
 
-	draw_list->AddRect(shadow_rect_min, shadow_rect_max, shadowColor, rounding, 0, borderThickness);
+	// Top Right Corner
+	draw_list->AddLine(ImVec2(rect_max.x, rect_min.y), ImVec2(rect_max.x - cornerLength, rect_min.y), boxColor, borderThickness);
+	draw_list->AddLine(ImVec2(rect_max.x, rect_min.y), ImVec2(rect_max.x, rect_min.y + cornerLength), boxColor, borderThickness);
 
-	draw_list->AddRect(rect_min, rect_max, boxColor, rounding, 0, borderThickness);
+	// Bottom Left Corner
+	draw_list->AddLine(ImVec2(rect_min.x, rect_max.y), ImVec2(rect_min.x + cornerLength, rect_max.y), boxColor, borderThickness);
+	draw_list->AddLine(ImVec2(rect_min.x, rect_max.y), ImVec2(rect_min.x, rect_max.y - cornerLength), boxColor, borderThickness);
 
-	float innerOffset = 1.5f;
-	ImVec2 inner_rect_min(rect_min.x + innerOffset, rect_min.y + innerOffset);
-	ImVec2 inner_rect_max(rect_max.x - innerOffset, rect_max.y - innerOffset);
-	ImColor innerBorderColor(150, 150, 150, 200);  
-	draw_list->AddRect(inner_rect_min, inner_rect_max, innerBorderColor, rounding, 0, borderThickness * 0.5f);
-
-	ImColor accentColor(255, 255, 255, 150); 
-	draw_list->AddLine(ImVec2(rect_min.x, rect_min.y), ImVec2(rect_max.x, rect_min.y), accentColor, borderThickness * 0.5f);
-
-	draw_list->AddLine(ImVec2(rect_min.x, rect_max.y), ImVec2(rect_max.x, rect_max.y), accentColor, borderThickness * 0.5f);
+	// Bottom Right Corner
+	draw_list->AddLine(ImVec2(rect_max.x, rect_max.y), ImVec2(rect_max.x - cornerLength, rect_max.y), boxColor, borderThickness);
+	draw_list->AddLine(ImVec2(rect_max.x, rect_max.y), ImVec2(rect_max.x, rect_max.y - cornerLength), boxColor, borderThickness);
 }
+
 
 
 
@@ -189,6 +186,13 @@ VOID __fastcall RenderESP()
 		ImVec2 TextSize = ImGui::CalcTextSize(Entity.Chicken.Name.c_str());
 		ImVec2 TextPos = { Entity.Chicken.Rectangle.x + Entity.Chicken.Rectangle.z / 2 - TextSize.x / 2, Entity.Chicken.Rectangle.y - 16 };
 		ImGui::GetForegroundDrawList()->AddText(TextPos, MenuConfig::NameColor, Entity.Chicken.Name.c_str());
+
+		float DistanceToLocal = SDK::LocalPawn->GetOrigin().DistTo(Entity.Chicken.WorldPosition) * 0.0254;
+		int RoundedDistance = static_cast<int>(std::floor(DistanceToLocal));
+		std::string DistanceText = std::to_string(RoundedDistance) + "m";
+		ImVec2 DistanceTextSize = ImGui::CalcTextSize(DistanceText.c_str());
+		ImVec2 DistanceTextPos = { Entity.Chicken.Rectangle.x + Entity.Chicken.Rectangle.z / 2 - DistanceTextSize.x / 2, Entity.Chicken.Rectangle.y + Entity.Chicken.Rectangle.w + 2.0f };
+		ImGui::GetForegroundDrawList()->AddText(DistanceTextPos, MenuConfig::DistanceColor, DistanceText.c_str());
 	}
 
 	ImGui::PopFont();
@@ -207,22 +211,41 @@ VOID __fastcall RenderESP()
 		if (Entity.WorldPosition.x == 0 || Entity.WorldPosition.y == 0 || Entity.WorldPosition.z == 0)
 			continue;
 
+
+		ImVec2 IconTextSize;
+
 		if (Entity.Name == "CBaseAnimGraph" || Entity.Name == "C4")
 		{
 			ImGui::PushFont(DefuseKitFont);
 			std::string WeaponIcon = GunIcon(Entity.Name);
-			ImVec2 TextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
-			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - TextSize.x * 0.5f, ScreenPosition.y - TextSize.y * 0.5f), MenuConfig::ItemColor, WeaponIcon.c_str());
+			IconTextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
+			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - IconTextSize.x * 0.5f, ScreenPosition.y - IconTextSize.y * 0.5f), MenuConfig::ItemColor, WeaponIcon.c_str());
 			ImGui::PopFont();
+
+			ImVec2 NameTextSize = ImGui::CalcTextSize(Entity.Name.c_str());
+			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - NameTextSize.x * 0.5f, ScreenPosition.y + IconTextSize.y * 0.5f + 2.0f), MenuConfig::ItemColor, Entity.Name.c_str());
 		}
+
 		else
 		{
 			ImGui::PushFont(WeaponFont);
 			std::string WeaponIcon = GunIcon(Entity.Name);
-			ImVec2 TextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
-			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - TextSize.x * 0.5f, ScreenPosition.y - TextSize.y * 0.5f), MenuConfig::ItemColor, WeaponIcon.c_str());
+			IconTextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
+			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - IconTextSize.x * 0.5f, ScreenPosition.y - IconTextSize.y * 0.5f), MenuConfig::ItemColor, WeaponIcon.c_str());
 			ImGui::PopFont();
+
+			ImVec2 NameTextSize = ImGui::CalcTextSize(Entity.Name.c_str());
+			ImGui::GetForegroundDrawList()->AddText(ImVec2(ScreenPosition.x - NameTextSize.x * 0.5f, ScreenPosition.y + IconTextSize.y * 0.5f + 2.0f), MenuConfig::ItemColor, Entity.Name.c_str());
 		}
+
+		float DistanceToLocal = SDK::LocalPawn->GetOrigin().DistTo(Entity.WorldPosition) * 0.0254;
+		int RoundedDistance = static_cast<int>(std::floor(DistanceToLocal));
+		std::string DistanceText = std::to_string(RoundedDistance) + "m";
+		ImVec2 DistanceTextSize = ImGui::CalcTextSize(DistanceText.c_str());
+		ImVec2 DistanceTextPos = { ScreenPosition.x - DistanceTextSize.x / 2, ScreenPosition.y - IconTextSize.y - DistanceTextSize.y - 2.0f };
+		ImGui::GetForegroundDrawList()->AddText(DistanceTextPos, MenuConfig::DistanceColor, DistanceText.c_str());
+
+
 	}
 
 	for (auto it = ActiveInfernoEntities.begin(); it != ActiveInfernoEntities.end();)

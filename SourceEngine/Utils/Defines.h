@@ -23,6 +23,7 @@ public:
 #define _NUMBER_MAX_BASE 36;
 
 #define CLIENT_DLL (L"client.dll")
+#define SCENESYSTEM_DLL (L"scenesystem.dll")
 #define ENGINE2_DLL (L"engine2.dll")
 #define GAME_RESOURCE_SERVICE_CLIENT ("GameResourceServiceClientV00")
 #define SOURCE2_ENGINE_TO_CLIENT ("Source2EngineToClient00")

@@ -9,7 +9,7 @@ public:
 	float flWhen; //0x0000
 	MEM_PAD(0x4); //0x0004
 	std::uint64_t nButton; //0x0008
-	bool bPressed; //0x0010
+	bool bPressed; //0x0010 
 	MEM_PAD(0x7); //0x0011
 }; //Size: 0x0018
 
@@ -65,13 +65,8 @@ public:
 
 	void SetViewAngle(QAngle_t& angView)
 	{
-		// @ida: this got called before GetMatricesForView
 		using fnSetViewAngle = std::int64_t(__fastcall*)(void*, std::int32_t, QAngle_t&);
 		static auto oSetViewAngle = reinterpret_cast<fnSetViewAngle>(M::FindPattern(CLIENT_DLL, "85 D2 75 3F 48"));
-
-#ifdef CS_PARANOID
-		CS_ASSERT(oSetViewAngle != nullptr);
-#endif
 
 		oSetViewAngle(this, 0, std::ref(angView));
 	}
@@ -80,10 +75,6 @@ public:
 	{
 		using fnGetViewAngles = std::int64_t(__fastcall*)(CCSGOInput*, std::int32_t);
 		static auto oGetViewAngles = reinterpret_cast<fnGetViewAngles>(M::FindPattern(CLIENT_DLL, "4C 8B C1 85 D2 74 08 48 8D 05 ? ? ? ? C3"));
-
-#ifdef CS_PARANOID
-		CS_ASSERT(oGetViewAngles != nullptr);
-#endif
 
 		return *reinterpret_cast<QAngle_t*>(oGetViewAngles(this, 0));
 	}
