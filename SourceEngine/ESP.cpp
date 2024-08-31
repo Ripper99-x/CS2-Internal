@@ -168,7 +168,7 @@ VOID __fastcall RenderESP()
 				{
 					std::string WeaponIcon = GunIcon(WeaponEntity.Name);
 					ImVec2 TextSize = ImGui::CalcTextSize(WeaponIcon.c_str());
-					ImVec2 TextPosition = { Entity.Pawn.Rectangle.x + (Entity.Pawn.Rectangle.z - TextSize.x) * 0.5f, Entity.Pawn.Rectangle.y + Entity.Pawn.Rectangle.w };
+					ImVec2 TextPosition = { Entity.Pawn.Rectangle.x + (Entity.Pawn.Rectangle.z - TextSize.x) * 0.5f, Entity.Pawn.Rectangle.y + Entity.Pawn.Rectangle.w + 5.0f};
 					ImGui::GetForegroundDrawList()->AddText(TextPosition, MenuConfig::WeaponColor, WeaponIcon.c_str());
 					break;
 				}

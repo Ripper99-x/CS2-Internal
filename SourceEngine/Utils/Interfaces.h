@@ -8,6 +8,7 @@ class IGameResourceService;
 class IEngineClient;
 class IEngineCVar;
 class Tracing;
+class IMemAlloc;
 
 
 class CInterfaceRegister
@@ -66,6 +67,7 @@ namespace I
 	inline IGameResourceService* GameResourceService = nullptr;
 	inline IEngineClient* Engine = nullptr;
 	inline IEngineCVar* Cvar = nullptr;
+	inline IMemAlloc* MemAlloc = nullptr;
 
 }
 

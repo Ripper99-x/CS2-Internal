@@ -6,57 +6,57 @@ VOID MenuESP()
     ImGui::PushItemWidth(220.0f);
 
     // Enable Box ESP
-    ImGui::Text(xorstr_("Box ESP"));
+    ImGui::Text(("Box ESP"));
     ImGui::Separator();
-    ImGui::Checkbox(xorstr_("Enable"), &MenuConfig::ShowBoxESP);
+    ImGui::Checkbox(("Enable"), &MenuConfig::ShowBoxESP);
     ImGui::SameLine(200);
-    ImGui::Text(xorstr_("Visible:"));
+    ImGui::Text(("Visible:"));
     ImGui::SameLine(270); 
-    ImGui::ColorEdit4(xorstr_("##BoxColorVisible"), reinterpret_cast<float*>(&MenuConfig::BoxColorVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::ColorEdit4(("##BoxColorVisible"), reinterpret_cast<float*>(&MenuConfig::BoxColorVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
     ImGui::SameLine(360); 
-    ImGui::Text(xorstr_("Not Visible:"));
+    ImGui::Text(("Not Visible:"));
     ImGui::SameLine(460); 
-    ImGui::ColorEdit4(xorstr_("##BoxColorNotVisible"), reinterpret_cast<float*>(&MenuConfig::BoxColorNotVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::Text(xorstr_("Thickness:"));
+    ImGui::ColorEdit4(("##BoxColorNotVisible"), reinterpret_cast<float*>(&MenuConfig::BoxColorNotVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::Text(("Thickness:"));
     ImGui::SameLine(270); 
-    ImGui::SliderFloat(xorstr_("##BoxThickness"), &MenuConfig::BoxThickness, 0.5f, 2.0f, "%.2f");
+    ImGui::SliderFloat(("##BoxThickness"), &MenuConfig::BoxThickness, 0.5f, 2.0f, "%.2f");
 
     ImGui::Spacing();
     ImGui::Spacing();
 
-    ImGui::Text(xorstr_("Bone ESP"));
+    ImGui::Text(("Bone ESP"));
     ImGui::Separator();
-    ImGui::Checkbox(xorstr_("Enable"), &MenuConfig::ShowBoneESP);
+    ImGui::Checkbox(("Enable"), &MenuConfig::ShowBoneESP);
     ImGui::SameLine(200);
-    ImGui::Text(xorstr_("Visible:"));
+    ImGui::Text(("Visible:"));
     ImGui::SameLine(270); 
-    ImGui::ColorEdit4(xorstr_("##BoneColorVisible"), reinterpret_cast<float*>(&MenuConfig::BoneColorVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::ColorEdit4(("##BoneColorVisible"), reinterpret_cast<float*>(&MenuConfig::BoneColorVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
     ImGui::SameLine(360); 
-    ImGui::Text(xorstr_("Not Visible:"));
+    ImGui::Text(("Not Visible:"));
     ImGui::SameLine(460); 
-    ImGui::ColorEdit4(xorstr_("##BoneColorNotVisible"), reinterpret_cast<float*>(&MenuConfig::BoneColorNotVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::Text(xorstr_("Thickness:"));
+    ImGui::ColorEdit4(("##BoneColorNotVisible"), reinterpret_cast<float*>(&MenuConfig::BoneColorNotVisible), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::Text(("Thickness:"));
     ImGui::SameLine(270); 
-    ImGui::SliderFloat(xorstr_("##BoneThickness"), &MenuConfig::BoneThickness, 0.5f, 2.0f, "%.2f");
+    ImGui::SliderFloat(("##BoneThickness"), &MenuConfig::BoneThickness, 0.5f, 2.0f, "%.2f");
 
     ImGui::Spacing();
     ImGui::Spacing();
 
-    ImGui::Text(xorstr_("Other ESP"));
+    ImGui::Text(("Other ESP"));
     ImGui::Separator();
-    ImGui::Checkbox(xorstr_("Health ESP"), &MenuConfig::ShowHealthBar);
-    ImGui::Checkbox(xorstr_("Distance ESP"), &MenuConfig::ShowDistance);
+    ImGui::Checkbox(("Health ESP"), &MenuConfig::ShowHealthBar);
+    ImGui::Checkbox(("Distance ESP"), &MenuConfig::ShowDistance);
     ImGui::SameLine(200);
-    ImGui::ColorEdit4(xorstr_("##DistanceColor"), reinterpret_cast<float*>(&MenuConfig::DistanceColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::Checkbox(xorstr_("Weapon ESP"), &MenuConfig::ShowWeaponESP);
+    ImGui::ColorEdit4(("##DistanceColor"), reinterpret_cast<float*>(&MenuConfig::DistanceColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::Checkbox(("Weapon ESP"), &MenuConfig::ShowWeaponESP);
     ImGui::SameLine(200);
-    ImGui::ColorEdit4(xorstr_("##WeaponColor"), reinterpret_cast<float*>(&MenuConfig::WeaponColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::Checkbox(xorstr_("Name ESP"), &MenuConfig::ShowPlayerName);
+    ImGui::ColorEdit4(("##WeaponColor"), reinterpret_cast<float*>(&MenuConfig::WeaponColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::Checkbox(("Name ESP"), &MenuConfig::ShowPlayerName);
     ImGui::SameLine(200);
-    ImGui::ColorEdit4(xorstr_("##NameColor"), reinterpret_cast<float*>(&MenuConfig::NameColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
-    ImGui::Checkbox(xorstr_("Item ESP"), &MenuConfig::ItemESP);
+    ImGui::ColorEdit4(("##NameColor"), reinterpret_cast<float*>(&MenuConfig::NameColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::Checkbox(("Item ESP"), &MenuConfig::ItemESP);
     ImGui::SameLine(200);
-    ImGui::ColorEdit4(xorstr_("##ItemColor"), reinterpret_cast<float*>(&MenuConfig::ItemColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
+    ImGui::ColorEdit4(("##ItemColor"), reinterpret_cast<float*>(&MenuConfig::ItemColor), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel);
 
     ImGui::PopItemWidth();
 }
@@ -67,43 +67,43 @@ VOID MenuAimBot()
     ImGui::PushItemWidth(220.0f);
 
     // Aimbot settings
-    ImGui::Text(xorstr_("Aimbot Settings"));
+    ImGui::Text(("Aimbot Settings"));
     ImGui::Separator();
-    ImGui::Checkbox(xorstr_("Enable Aimbot"), &MenuConfig::EnableAimbot);
+    ImGui::Checkbox(("Enable Aimbot"), &MenuConfig::EnableAimbot);
     if (MenuConfig::EnableAimbot)
         MenuConfig::StandloneRCS = false;
 
-    ImGui::Checkbox(xorstr_("Standlone RCS"), &MenuConfig::StandloneRCS);
+    ImGui::Checkbox(("Standlone RCS"), &MenuConfig::StandloneRCS);
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::SliderFloat("Vertical Recoil Control (RCS_Y)", &MenuConfig::RCS_Y, 0.0f, 5.0f, "%.2f");
     ImGui::SliderFloat("Horizontal Recoil Control (RCS_X)", &MenuConfig::RCS_X, 0.0f, 5.0f, "%.2f");
 
     // Bone selection
-    ImGui::Text(xorstr_("Bone Selection"));
+    ImGui::Text(("Bone Selection"));
     ImGui::Separator();
-    if (ImGui::Combo(xorstr_("Visible Bone"), &MenuConfig::CurrentBoneIndex, Bones, IM_ARRAYSIZE(Bones)))
+    if (ImGui::Combo(("Visible Bone"), &MenuConfig::CurrentBoneIndex, Bones, IM_ARRAYSIZE(Bones)))
     {
         BONEINDEX SelectedBoneIndex = BoneIndexMap[MenuConfig::CurrentBoneIndex];
         MenuConfig::SelectedBoneIndex = SelectedBoneIndex;
     }
-    ImGui::Checkbox(xorstr_("Aim Closest Visible Bone to FOV"), &MenuConfig::TargetClosestVisibleBoneToFov);
+    ImGui::Checkbox(("Aim Closest Visible Bone to FOV"), &MenuConfig::TargetClosestVisibleBoneToFov);
     ImGui::Spacing();
     ImGui::Spacing();
 
     // Aimbot parameters
-    ImGui::Text(xorstr_("Aimbot Parameters"));
+    ImGui::Text(("Aimbot Parameters"));
     ImGui::Separator();
-    ImGui::SliderFloat(xorstr_("Smoothness"), &MenuConfig::AimSmoothness, 1.0f, 10.0f);
-    ImGui::SliderFloat(xorstr_("FOV"), &MenuConfig::FOV, 1.0f, 1000.0f);
-    ImGui::Checkbox(xorstr_("Draw FOV"), &MenuConfig::DrawFOV);
+    ImGui::SliderFloat(("Smoothness"), &MenuConfig::AimSmoothness, 1.0f, 10.0f);
+    ImGui::SliderFloat(("FOV"), &MenuConfig::FOV, 1.0f, 1000.0f);
+    ImGui::Checkbox(("Draw FOV"), &MenuConfig::DrawFOV);
     ImGui::Spacing();
     ImGui::Spacing();
 
     // Hotkey selection
-    ImGui::Text(xorstr_("Hotkey"));
+    ImGui::Text(("Hotkey"));
     ImGui::Separator();
-    if (ImGui::Combo(xorstr_("AimKey"), &CurrentHotkey, HotKeys, IM_ARRAYSIZE(HotKeys)))
+    if (ImGui::Combo(("AimKey"), &CurrentHotkey, HotKeys, IM_ARRAYSIZE(HotKeys)))
         MenuConfig::SelectedHotkey = CurrentHotkey;
 
 
@@ -111,9 +111,9 @@ VOID MenuAimBot()
     ImGui::Spacing();
 
     // Silent Aim
-    ImGui::Text(xorstr_("Additional Settings"));
+    ImGui::Text(("Additional Settings"));
     ImGui::Separator();
-    ImGui::Checkbox(xorstr_("Silent Aim"), &MenuConfig::EnableSilentAim);
+    ImGui::Checkbox(("Silent Aim"), &MenuConfig::EnableSilentAim);
 
     ImGui::PopItemWidth();
 }
@@ -150,15 +150,15 @@ VOID Miscellaneous()
         ImGui::Text("Skybox Color Settings:");
         ImGui::Separator();
 
-        static float hue = 0.0f;
+        static float Hue = 0.0f;
 
-        ImGui::SliderFloat("Hue", &hue, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat("Hue", &Hue, 0.0f, 1.0f, "%.2f");
 
-        ImVec4 rgbColor = ImColor::HSV(hue, 1.0f, 1.0f);  // Full saturation and brightness
+        ImVec4 RGBColor = ImColor::HSV(Hue, 1.0f, 1.0f); 
 
-        MenuConfig::g_SkyboxColor.x = rgbColor.x;
-        MenuConfig::g_SkyboxColor.y = rgbColor.y;
-        MenuConfig::g_SkyboxColor.z = rgbColor.z;
+        MenuConfig::g_SkyboxColor.x = RGBColor.x;
+        MenuConfig::g_SkyboxColor.y = RGBColor.y;
+        MenuConfig::g_SkyboxColor.z = RGBColor.z;
 
         ImGui::PopItemWidth();
         ImGui::End();
@@ -171,6 +171,15 @@ VOID Miscellaneous()
 
     if (MenuConfig::EnableSmokeColor)
         ImGui::ColorEdit4("##SmokeColorPicker", (float*)&MenuConfig::SmokeColorPicker);
+
+
+    ImGui::Text("TriggerBot Settings:");
+
+    ImGui::Checkbox("Enable TriggerBot", &MenuConfig::TriggerBot);
+
+    ImGui::SliderFloat("Distance Threshold", &MenuConfig::TriggerbotDistanceThreshold, 0.0f, 250.0f, "%.1f");
+    ImGui::SliderFloat("Angle Tolerance", &MenuConfig::TriggerbotAngleTolerance, 0.0f, 150.0f, "%.1f");
+    ImGui::Text("Leave them on default if you don't understand what they do:");
 
 
 }
@@ -204,13 +213,13 @@ VOID __fastcall RenderUI()
 
         ImVec2 MenuSize = ImVec2(1000, 1000);
 
-        ImGui::Begin(xorstr_("CS2 INTERNAL"), nullptr, WindowFlags);
+        ImGui::Begin(("CS2 INTERNAL"), nullptr, WindowFlags);
 
-        if (ImGui::Button(xorstr_("ESP"), ImVec2(185, 0))) MenuConfig::MenuState = 1;
+        if (ImGui::Button(("ESP"), ImVec2(185, 0))) MenuConfig::MenuState = 1;
         ImGui::SameLine();
-        if (ImGui::Button(xorstr_("Aimbot"), ImVec2(185, 0))) MenuConfig::MenuState = 2;
+        if (ImGui::Button(("Aimbot"), ImVec2(185, 0))) MenuConfig::MenuState = 2;
         ImGui::SameLine();
-        if (ImGui::Button(xorstr_("Miscellaneous"), ImVec2(215, 0))) MenuConfig::MenuState = 3;
+        if (ImGui::Button(("Miscellaneous"), ImVec2(215, 0))) MenuConfig::MenuState = 3;
 
         switch (MenuConfig::MenuState)
         {

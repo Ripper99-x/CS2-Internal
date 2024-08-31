@@ -1,9 +1,9 @@
 #include "Hooks.h"
 #include "W2S.h"
-
+#include "CRC.h"
 extern Vector4D_t Get2DBox(Vector_t WorldPosition, const float Height);
 extern VOID Recoil(CCSGOInput* Input);
-
+extern VOID TriggerBot(CCSGOInput* pInput);
 
 static const std::unordered_map<std::string, size_t> ClassTrimMap =
 {
@@ -24,7 +24,7 @@ static const std::unordered_map<std::string, size_t> ClassTrimMap =
 
 };
 
-inline void PlayerEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo) 
+inline void PlayerEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassInfo, CCSGOInput* pInput) 
 {
 	if (FNV1A::Hash(pClassInfo->szName) != FNV1A::HashConst("CCSPlayerController"))
 		return;
@@ -71,8 +71,10 @@ inline void PlayerEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassI
 	Entity.Pawn.BoneData.BonePositions.clear();
 	Entity.Pawn.BoneData.BonePositions.resize(104);
 
-	for (const auto& BoneList : BoneJointList::List) {
-		for (const auto& BoneIndex : BoneList) {
+	for (const auto& BoneList : BoneJointList::List) 
+	{
+		for (const auto& BoneIndex : BoneList) 
+		{
 			if (BoneIndex >= Entity.Pawn.BoneData.BonePositions.size())
 				continue;
 
@@ -84,6 +86,8 @@ inline void PlayerEntities(C_BaseEntity* pEntity, SchemaClassInfoData_t* pClassI
 			Entity.Pawn.BoneData.BonePositions[BoneIndex] = Position;
 		}
 	}
+
+	Entity.CanHit = Pawn->TriggerHit(SDK::LocalPawn, Pawn, pInput, Entity.Pawn.BoneData);
 
 	NextPlayerList->push_back(Entity);
 }
@@ -232,6 +236,13 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 	if (pCmd == nullptr)
 		return bResult;
 
+	SDK::Cmd = pCmd;
+
+	CBaseUserCmdPB* pBaseCmd = pCmd->csgoUserCmd.pBaseCmd;
+
+	if (pBaseCmd == nullptr)
+		return bResult;
+
 	for (int nIndex = 1; nIndex <= I::GameResourceService->pGameEntitySystem->GetHighestEntityIndex(); nIndex++)
 	{
 
@@ -245,7 +256,7 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 		if (pClassInfo == nullptr)
 			continue;
 
-		PlayerEntities(pEntity, pClassInfo);
+		PlayerEntities(pEntity, pClassInfo, pInput);
 		WeaponEntities(pEntity, pClassInfo);
 		ChickenEntities(pEntity, pClassInfo);
 		InfernoEntities(pEntity, pClassInfo);
@@ -262,9 +273,19 @@ bool __fastcall hkCreateMove(CCSGOInput* pInput, int nSlot, bool bActive)
 
 	SkyBox(g_pEnvSky);
 	SmokeColor(g_pSmokeGrenadeProjectile);
-	SilentAim(pCmd);
-	Aimbot(pInput);
-	Recoil(pInput);
+
+	if (SDK::LocalPawn->GetHealth() > 0 && SDK::LocalController->IsPawnAlive())
+	{
+		SilentAim(pCmd);
+		Aimbot(pInput);
+		Recoil(pInput);
+		TriggerBot(pInput);
+	}
+
+	CRC::Save(SDK::Cmd->csgoUserCmd.pBaseCmd);
+
+	if (CRC::CalculateCRC(SDK::Cmd->csgoUserCmd.pBaseCmd) == true)
+		CRC::Apply(SDK::Cmd);
 
 	return bResult;
 }

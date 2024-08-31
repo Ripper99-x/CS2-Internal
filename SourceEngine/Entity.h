@@ -25,13 +25,15 @@ class C_CSWeaponBase;
 class C_Inferno;
 class C_EnvSky;
 class C_SmokeGrenadeProjectile;
-
+class CCSGOInput;
 inline SchemaClassInfoData_t* pClassInfo;
 inline C_EnvSky* g_pEnvSky = nullptr; 
 inline C_SmokeGrenadeProjectile* g_pSmokeGrenadeProjectile = nullptr;
 
 struct PlayerEntity
 {
+	bool CanHit = false;
+
 	struct C_CSPlayerController
 	{
 		std::string m_sSanitizedPlayerName;
@@ -46,8 +48,6 @@ struct PlayerEntity
 		Vector4D_t Rectangle;
 		bool isVisible = false;
 		int Health = 0;
-		std::string pClippingWeapon;
-
 	}Pawn;
 };
 
@@ -172,6 +172,7 @@ public:
 
 		SchemaClassInfoData_t* pClassInfo;
 		GetSchemaClassInfo(&pClassInfo);
+
 		if (pClassInfo == nullptr)
 			return false;
 
@@ -224,6 +225,7 @@ public:
 	bool IsOtherEnemy();
 	bool BoneVisible(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy, Vector_t Location);
 	bool EyeVisible(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy);
+	bool TriggerHit(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy, CCSGOInput* pInput, const CBone& BoneData);
 	SCHEMA_ADD_FIELD(QAngle_t, GetPunchAngle, "C_CSPlayerPawn->m_aimPunchAngle");
 	SCHEMA_ADD_FIELD(CUtlVector, GetCachedAngle, "C_CSPlayerPawn->m_aimPunchCache");
 	SCHEMA_ADD_FIELD(int, GetShotsFired, "C_CSPlayerPawn->m_iShotsFired");
@@ -282,6 +284,7 @@ class C_CSWeaponBase : public C_BasePlayerWeapon
 {
 public:
 
+	SCHEMA_ADD_FIELD(int, m_nNextPrimaryAttackTick, "C_BasePlayerWeapon->m_nNextPrimaryAttackTick");
 
 
 };
@@ -361,4 +364,27 @@ class C_SmokeGrenadeProjectile
 public:
 
 	SCHEMA_ADD_FIELD(Vector_t, m_vSmokeColor, "C_SmokeGrenadeProjectile->m_vSmokeColor");
+};
+
+
+class C_HitBox
+{
+public:
+	const char* m_name; // 0x0	
+	const char* m_sSurfaceProperty; // 0x8	
+	const char* m_sBoneName; // 0x10	
+	Vector_t m_vMinBounds; // 0x18	
+	Vector_t m_vMaxBounds; // 0x24	
+	float m_flShapeRadius; // 0x30	
+	uint32_t m_nBoneNameHash; // 0x34	
+	int32_t m_nGroupId; // 0x38	
+	uint8_t m_nShapeType; // 0x3c	
+	bool m_bTranslationOnly; // 0x3d	
+private:
+	uint8_t __pad003e[0x2]; // 0x3e
+public:
+	uint32_t m_CRC; // 0x40	
+	Color_t m_cRenderColor; // 0x44	
+	uint16_t m_nHitBoxIndex; // 0x48
+	char pad2[0x26];
 };

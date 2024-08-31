@@ -58,12 +58,11 @@ VOID SilentAim(CUserCmd* pCmd)
         TargetAngles.Normalize();
         TargetAngles.Clamp();
 
-        if (MenuConfig::RCS)
-        {
-            QAngle_t PunchAngle = SDK::LocalPawn->GetPunchAngle();
-            TargetAngles.x -= PunchAngle.x * 2.0f;
-            TargetAngles.y -= PunchAngle.y * 2.0f;
-        }
+
+        QAngle_t PunchAngle = SDK::LocalPawn->GetPunchAngle();
+        TargetAngles.x -= PunchAngle.x * 2.0f;
+        TargetAngles.y -= PunchAngle.y * 2.0f;
+
 
         pCmd->SetSubTickAngle(TargetAngles);
     }

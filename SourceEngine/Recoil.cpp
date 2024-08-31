@@ -7,16 +7,19 @@ VOID Recoil(CCSGOInput* Input)
     if (!MenuConfig::StandloneRCS)
         return;
 
+    if (Input == nullptr || SDK::LocalPawn == nullptr)
+        return;
+
     QAngle_t CurrentViewAngles = Input->GetViewAngles();
 
     CUtlVector PunchAngleCache = SDK::LocalPawn->GetCachedAngle();
 
-    if (PunchAngleCache.count == 0 || !PunchAngleCache.data)
+    if (PunchAngleCache.count == 0 || PunchAngleCache.data == nullptr)
         return;
 
-   
-
     QAngle_t* CurrentPunchAngle = &PunchAngleCache.data[PunchAngleCache.count - 1];
+    if (CurrentPunchAngle == nullptr)
+        return;
 
     static QAngle_t PreviousPunchAngle = { 0.0f, 0.0f, 0.0f };
 
@@ -36,9 +39,8 @@ VOID Recoil(CCSGOInput* Input)
 
         PreviousPunchAngle = *CurrentPunchAngle;
     }
-
     else
+    {
         PreviousPunchAngle = { 0.0f, 0.0f, 0.0f };
-
-   
+    }
 }

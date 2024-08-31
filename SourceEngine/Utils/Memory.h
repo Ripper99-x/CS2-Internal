@@ -2,6 +2,17 @@
 #include "Windows.h"
 #include "string"
 #include "vector"
+#include "cVector.h"
+#include "../qAngles.h"
+#include "Defines.h"
+
+#ifndef DEG2RAD
+#define DEG2RAD(x) ((x) * (M_PI / 180.0f))
+#endif
+
+
+class CUtlBuffer;
+
 namespace M
 {
 	inline void* GetModuleBaseHandle(const wchar_t* wszModuleName)
@@ -174,4 +185,20 @@ namespace M
 		return NewVTable;
 	}
 
+	inline Vector_t AngleToDirection(const QAngle_t& Angles)
+	{
+		Vector_t Direction;
+		float Pitch = DEG2RAD(Angles.x);
+		float Yaw = DEG2RAD(Angles.y);
+
+		Direction.x = cos(Pitch) * cos(Yaw);
+		Direction.y = cos(Pitch) * sin(Yaw);
+		Direction.z = -sin(Pitch);
+
+		return Direction;
+	}
+
+	inline void(__fastcall* fnUtlBufferInit)(CUtlBuffer*, int, int, int);
+	inline void(__fastcall* fnUtlBufferPutString)(CUtlBuffer*, const char*);
+	inline void(__fastcall* fnUtlBufferEnsureCapacity)(CUtlBuffer*, int);
 }

@@ -4,7 +4,9 @@
 #include "Utils/cVector.h"
 #include "iEngineClient.h"
 #include "GameResourceService.h"
+#include "CheatMenu.h"
 
+extern inline QAngle_t CalculateAngleScalar(const Vector_t& src, const Vector_t& dst);
 
 bool C_CSPlayerPawn::BoneVisible(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy, Vector_t Location)
 {
@@ -28,6 +30,51 @@ bool C_CSPlayerPawn::EyeVisible(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy)
 	Vector_t EnemyEye = Enemy->GetEyePosition();
 	I::Trace->TraceShape(Ray, &LocalEye, &EnemyEye, Filter, Trace);
 	return Trace.HitEntity && Trace.HitEntity->GetRefEHandle().GetEntryIndex() == Enemy->GetRefEHandle().GetEntryIndex() || Trace.Fraction > 0.97f;
+}
+
+
+bool C_CSPlayerPawn::TriggerHit(C_CSPlayerPawn* Local, C_CSPlayerPawn* Enemy, CCSGOInput* pInput, const CBone& BoneData)
+{
+	Trace_Filter_t Filter = {};
+	I::Trace->Init(Filter, Local, 0x1C3003, 4, 7);
+	Game_Trace_t Trace = {};
+	Ray_t Ray = {};
+	Vector_t Start = Local->GetEyePosition();
+
+	QAngle_t AdjustedAngles = pInput->GetViewAngles();
+
+	Vector_t Direction = M::AngleToDirection(AdjustedAngles);
+
+	Vector_t TargetPosition = Start + (Direction * 8192.0f);
+
+	I::Trace->TraceShape(Ray, &Start, &TargetPosition, Filter, Trace);
+
+	if (Trace.HitEntity && Trace.HitEntity->GetRefEHandle().GetEntryIndex() == Enemy->GetRefEHandle().GetEntryIndex())
+	{
+		Vector_t HitPosition = Trace.m_end_pos;
+
+		for (const auto& BonePosition : BoneData.BonePositions)
+		{
+			if (!BonePosition.RayTraceVisible)
+				continue;
+
+			float Distance = (HitPosition - BonePosition.Location).Length();
+
+			if (Distance < MenuConfig::TriggerbotDistanceThreshold)
+			{
+				QAngle_t ViewAngles = pInput->GetViewAngles();
+				QAngle_t TargetAngles = CalculateAngleScalar(HitPosition, BonePosition.Location);
+
+				float AngleDifference = (ViewAngles - TargetAngles).Length();
+
+				if (AngleDifference < MenuConfig::TriggerbotAngleTolerance)
+					return true;
+		
+			}
+		}
+	}
+
+	return false;
 }
 
 bool C_Chicken::ChickenVisible(C_CSPlayerPawn* Local, C_Chicken* Enemy)

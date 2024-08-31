@@ -1,6 +1,5 @@
 #pragma once
 #include "Bones.h"
-#include "xorstr.h"
 #include "D3D.h"
 
 inline int CurrentHotkey;
@@ -22,13 +21,12 @@ namespace MenuConfig
 	inline bool ShowDistance = true;
 	inline bool ItemESP = true;
 	inline bool ShowPlayerName = true;
-	inline bool VisibleCheck = true;
 	inline bool DrawFOV = false;
-	inline bool RCS = true;
+	inline bool TriggerBot = false;
 	inline ImColor BoneColorVisible = ImColor(255, 0, 0, 255);     // Red for visible
-	inline ImColor BoneColorNotVisible = ImColor(255, 255, 255, 255); // Green for not visible
+	inline ImColor BoneColorNotVisible = ImColor(0, 255, 0, 255); // Green for not visible
 	inline ImColor BoxColorVisible = ImColor(255, 0, 0, 255);      // Red for visible
-	inline ImColor BoxColorNotVisible = ImColor(255, 255, 255, 255);  // Green for not visible
+	inline ImColor BoxColorNotVisible = ImColor(0, 255, 0, 255);  // Green for not visible
 	inline ImColor ItemColor = ImColor(255, 255, 255, 255);      // Cyan
 	inline ImColor NameColor = ImColor(255, 255, 255, 255);       // Yellow
 	inline ImColor WeaponColor = ImColor(255, 255, 255, 255);	   // White
@@ -36,14 +34,16 @@ namespace MenuConfig
 	inline float BoxThickness = 1.55f;
 	inline float BoneThickness = 1.55f;
 	inline float AimSmoothness = 1.0f;
-	inline float RCS_Y = 2.0f;
-	inline float RCS_X = 2.0f;
+	inline float RCS_Y = 2.55f;
+	inline float RCS_X = 2.40f;
 	inline bool ClosestBone = false;
 	inline int CurrentBoneIndex = 6;
 	inline float FOV = 100.0f;;
 	inline bool ShowMenu = true;
 	inline int MenuState = 1;
 	inline bool ShowTimer = true;
+	inline float TriggerbotDistanceThreshold = 155.0f;
+	inline float TriggerbotAngleTolerance = 55.0f;
 	inline bool LightChanger = false;
 	inline bool EnableSmokeColor = false;
 	inline ImVec4 g_SkyboxColor = ImVec4(1.0f, 0.75f, 0.8f, 1.0f);
@@ -117,8 +117,6 @@ inline BONEINDEX BoneIndexMap[] =
 	BONEINDEX::Leg_Lower_R, // 15 "Right Lower Leg" maps to BONEINDEX::Leg_Lower_R (26)
 	BONEINDEX::Ankle_R      // 16 "Right Ankle" maps to BONEINDEX::Ankle_R (27)
 };
-
-
 
 VOID MenuESP();
 VOID MenuAimBot();

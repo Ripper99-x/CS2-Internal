@@ -105,6 +105,9 @@
     <ClCompile Include="Recoil.cpp">
       <Filter>Features</Filter>
     </ClCompile>
+    <ClCompile Include="TriggerBot.cpp">
+      <Filter>Features</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils\Defines.h">
@@ -215,9 +218,6 @@
     <ClInclude Include="CheatMenu.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="xorstr.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="ESP.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -228,6 +228,18 @@
       <Filter>Features</Filter>
     </ClInclude>
     <ClInclude Include="Colors.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggerBot.h">
+      <Filter>Features</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utlbuffer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="iemalloc.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

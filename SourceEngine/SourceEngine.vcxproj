@@ -123,17 +123,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;SOURCEENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;SOURCEENGINE_EXPORTS;_WINDOWS;_USRDLL;_M_IX86_FP=2;__AVX__;__AVX2__;__AVX512F__
+;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ControlFlowGuard>false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +164,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Recoil.cpp" />
     <ClCompile Include="RenderHooks.cpp" />
+    <ClCompile Include="TriggerBot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aimbot.h" />
@@ -170,12 +173,14 @@
     <ClInclude Include="cGameEntitySystem.h" />
     <ClInclude Include="CheatMenu.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="CRC.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityHandle.h" />
     <ClInclude Include="ESP.h" />
     <ClInclude Include="GameResourceService.h" />
     <ClInclude Include="Hooks.h" />
+    <ClInclude Include="iemalloc.h" />
     <ClInclude Include="iEngineClient.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -194,6 +199,7 @@
     <ClInclude Include="Setup.h" />
     <ClInclude Include="TextFont.h" />
     <ClInclude Include="Tracing.h" />
+    <ClInclude Include="TriggerBot.h" />
     <ClInclude Include="UserCMD.h" />
     <ClInclude Include="Utils\cVector.h" />
     <ClInclude Include="Utils\Defines.h" />
@@ -202,9 +208,9 @@
     <ClInclude Include="Utils\Interfaces.h" />
     <ClInclude Include="Utils\Memory.h" />
     <ClInclude Include="Utils\ReturnAddressr.h" />
+    <ClInclude Include="utlbuffer.h" />
     <ClInclude Include="W2S.h" />
     <ClInclude Include="WeaponFont.h" />
-    <ClInclude Include="xorstr.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Utils\spoofer_stub.asm" />
