@@ -39,7 +39,7 @@ namespace M
 		}
 		else
 		{
-			static_assert(false, "Unsupported character type");
+			static_assert(std::is_same_v<C, void>, "Unsupported character type");
 		}
 	}
 
