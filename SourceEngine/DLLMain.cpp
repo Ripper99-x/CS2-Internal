@@ -37,7 +37,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
         PresentHook();
         Hooks::VirtualTable();
         Hooks::Detours();
-
         return true;
     }
 

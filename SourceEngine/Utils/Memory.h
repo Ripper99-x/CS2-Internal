@@ -37,10 +37,6 @@ namespace M
 		{
 			return std::wcscmp(tszLeft, tszRight);
 		}
-		else
-		{
-			static_assert(false, "Unsupported character type");
-		}
 	}
 
 

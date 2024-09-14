@@ -57,10 +57,6 @@ namespace CRC
 		using fnSerializePartialToArray = bool(__fastcall*)(CBaseUserCmdPB*, CUtlBuffer, int);
 		static const fnSerializePartialToArray oSerializePartialToArray = reinterpret_cast<fnSerializePartialToArray>(M::FindPattern(CLIENT_DLL, "48 89 5C 24 18 55 56 57 48 81 EC 90"));
 
-#ifdef CS_PARANOID
-		CS_ASSERT(oSerializePartialToArray != nullptr);
-#endif
-
 		if (oSerializePartialToArray(pBaseCmd, protobufBuffer, nCalcualtedCRCSize))
 		{
 			std::uintptr_t* pMessage = reinterpret_cast<uintptr_t*>(I::MemAlloc->Alloc(0x18));
@@ -72,16 +68,9 @@ namespace CRC
 			using fnWriteMessage = void(__fastcall*)(std::uintptr_t*, CUtlBuffer, int);
 			static const fnWriteMessage oWriteMessage = reinterpret_cast<fnWriteMessage>(M::FindPattern(CLIENT_DLL, "48 89 5C 24 10 48 89 6C 24 18 48 89 7C 24 20 41 56 48 83 EC 20 48 BF"));
 
-#ifdef CS_PARANOID
-			CS_ASSERT(oWriteMessage != nullptr);
-#endif
 
 			using fnSetMessageData = std::string* (__fastcall*)(void*, std::uintptr_t*, void*);
 			static const fnSetMessageData oSetMessageData = reinterpret_cast<fnSetMessageData>(M::FindPattern(CLIENT_DLL, "48 89 5C 24 20 55 56 57 48 83 EC 30 49"));
-
-#ifdef CS_PARANOID
-			CS_ASSERT(oSetMessageData != nullptr);
-#endif
 
 			oWriteMessage(pMessage, protobufBuffer, nCalcualtedCRCSize);
 			pBaseCmd->strMoveCrc = oSetMessageData(&pBaseCmd->strMoveCrc, pMessage, &nHasBits);
