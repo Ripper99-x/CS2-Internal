@@ -31,7 +31,6 @@ BOOL WINAPI DllMain(HMODULE hMod, DWORD dwReason, LPVOID lpReserved)
 {
     if (dwReason == DLL_PROCESS_ATTACH)
     {
-        AllocateConsole();
         Setup();
         SetupSchema("client.dll");
         InitializeOffsets();
